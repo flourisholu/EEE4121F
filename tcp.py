@@ -11,6 +11,7 @@ from mininet.net import Mininet
 from mininet.log import lg, info
 from mininet.util import dumpNodeConnections
 from mininet.cli import CLI
+from statistics import mean, stdev
 
 from subprocess import Popen, PIPE
 from time import sleep, time
@@ -83,10 +84,12 @@ class TCPTopo(Topo):
         # Here I have created a switch.  If you change its name, its
         # interface names will change from s0-eth1 to newname-eth1.
         switch = self.addSwitch('s0')
-        
+        h1 = self.addHost('h1')
+        h2 = self.addHost('h2')
+
         # TODO2: Add links with appropriate characteristics
-        
-        
+        self.addLink(h1, switch, bw=args.bw_host, delay=args.delay, max_queue_size=args.maxq)
+        self.addLink(h2, switch, bw=args.bw_net, delay=args.delay, max_queue_size=args.maxq)
         
         return
 
@@ -109,8 +112,9 @@ def start_qmon(iface, interval_sec=0.1, outfile="q.txt"):
 def start_iperf(net):
     
     # TODO4: Retrieve the hosts, replace with appropriate names
-    # There should be to hosts, one is added already
+    # There should be two hosts, one is added already
     h1 = net.get('h1')
+    h2 = net.get('h2')
     
     
     print("Starting iperf server...")
@@ -119,9 +123,12 @@ def start_iperf(net):
     # there is a chance that the router buffer may not get filled up.
     
     server = h1.popen("iperf -s -w 16m")
+    server2 = h2.popen("iperf -s w 16m")
+
     # TODO4: Start the iperf client on h1 and h2.  Ensure that you create two
     # long lived TCP flows in both directions (one is already created above)
-    
+    h2.cmd("iperf -c %s -t %s" % (h1.IP(), args.time))
+    h1.cmd("iperf -c %s -t %s" % (h2.IP(), args.time))
     
 def start_webserver(net):
     server = net.get('h1')
@@ -137,9 +144,26 @@ def start_ping(net):
     # Hint: Use host.popen(cmd, shell=True).  If you pass shell=True
     # to popen, you can redirect cmd's output using shell syntax.
     # i.e. ping ... > /path/to/ping.
+    h1 = net.get('h1')
+    h2 = net.get('h2')
+    ping_train =  h1.popen("ping -c %s -i 0.1 %s > %s/ping.txt" % (args.time*10, h2.IP(), args.dir), shell=True)
+    ping_train.communicate() #start the ping train
     
-    
-  
+
+# Use function to measure time it takes to complete webpage transfer
+def times(net, h1, h2):
+	store = []
+	webserver_ip = h1.IP()
+	# measure time to complete transfer between hosts 3 times
+	for i in range(3):
+		command = "curl -o index.html -s -w %%{time_total} %s/http/index.html" % webserver_ip
+		fetch = h2.popen(command, shell=True, stdout=PIPE)
+		var = float(fetch.stdout.read())
+		store.append(var)
+
+	#average = mean(store) # get average time to complete webpage transfer
+
+	return mean(store)
 
 def tcp():
     if not os.path.exists(args.dir):
@@ -167,9 +191,13 @@ def tcp():
                       outfile='%s/q.txt' % (args.dir))
 
     # TODO4: Start iperf 
+    s_iperf = Process(target=start_iperf, args=(net,))
+    s_iperf.start()
+
     # TODO5: Start ping trains
-    
-    
+    s_ping = Process(target=start_ping, args=(net,))
+    s_ping.start()
+    start_webserver(net)
 
     # TODO6: measure the time it takes to complete webpage transfer
     # from h1 to h2 (say) 3 times.  Hint: check what the following
@@ -179,11 +207,15 @@ def tcp():
 
     # Hint: have a separate function to do this and you may find the
     # loop below useful.
-    
+
+    time_taken = []
     start_time = time()
+    h1 = net.get('h1')
+    h2 = net.get('h2')
+
     while True:
         # do the measurement (say) 3 times.
-       
+        time_taken.append(times(net, h1, h2))
         sleep(5)
         now = time()
         delta = now - start_time
@@ -198,7 +230,14 @@ def tcp():
     # Hint: The command below invokes a CLI which you can use to
     # debug.  It allows you to run arbitrary commands inside your
     # emulated hosts h1 and h2.
-    # CLI(net)
+    CLI(net)
+
+    average = mean(time_taken)
+    std_dev = stdev(time_taken)
+
+    # Print answers to the screen
+    print("Average: %s seconds \n" % average)
+    print("Standard deviation: %s seconds \n" % std_dev)
 
     stop_tcpprobe()
     qmon.terminate()
@@ -209,3 +248,4 @@ def tcp():
 
 if __name__ == "__main__":
     tcp()
+
