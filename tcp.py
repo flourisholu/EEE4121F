@@ -129,7 +129,7 @@ def start_iperf(net):
     # long lived TCP flows in both directions (one is already created above)
     h2.cmd("iperf -c %s -t %s" % (h1.IP(), args.time))
     h1.cmd("iperf -c %s -t %s" % (h2.IP(), args.time))
-    
+
 def start_webserver(net):
     server = net.get('h1')
     proc = server.popen("python http/webserver.py", shell=True)
@@ -230,14 +230,14 @@ def tcp():
     # Hint: The command below invokes a CLI which you can use to
     # debug.  It allows you to run arbitrary commands inside your
     # emulated hosts h1 and h2.
-    CLI(net)
+    #CLI(net)
 
     average = mean(time_taken)
-    std_dev = stdev(time_taken)
+#    std_dev = stdev(time_taken)
 
     # Print answers to the screen
     print("Average: %s seconds \n" % average)
-    print("Standard deviation: %s seconds \n" % std_dev)
+#    print("Standard deviation: %s seconds \n" % std_dev)
 
     stop_tcpprobe()
     qmon.terminate()
