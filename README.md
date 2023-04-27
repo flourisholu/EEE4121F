@@ -9,6 +9,8 @@ Install the python statistics module
 sudo apt-get install update
 sudo apt-get install python-statistics
 ```
+## Viewing images
+The plot grah is saved as rtt.png and the queueUse `fim rrt.png` and `fim queue.png` to view the RTT and queue plots.
 
 ## Running TCP experiments
 There are three experiments run for each TCP algorithm. For each experiment, changes are made in the *run.sh* bash script. Changes are made to this section of code:
@@ -19,16 +21,16 @@ qsize=100
 cong=cubic
 ```
 ### TCP Reno
-Experiment 1: No changes need to be made
-Experiment 2: Uncomment `--cong=$cong \` under the comment `#Now start the experiment and load the parameters`
-Experiment 3: Change `qsize` to 20
+1. Experiment 1: No changes need to be made
+2. Experiment 2: Change `qsize` to 20
+3. Experiment 3: Change `bwhost` to 100 and `qsize` to 100
 
 ### TCP Cubic
-Experiment 1: No changes need to be made
-Experiment 2: Uncomment `--cong=$cong \` under the comment `#Now start the experiment and load the parameters`
-Experiment 3: Change `qsize` to 20
+1. Experiment 1: Uncomment `--cong=$cong \` under the comment `#Now start the experiment and load the parameters` and change `bwhost` back to 1000
+2. Experiment 2: Change `qsize` to 20
+3. Experiment 3: Change `bwhost` to 100 and `qsize` to 100
 
 ### TCP BBR
-Experiment 1: No changes need to be made
-Experiment 2: Uncomment `--cong=$cong \` under the comment `#Now start the experiment and load the parameters`
-Experiment 3: Change `qsize` to 20
+1. Experiment 1: Uncomment `--qman=$qman \` under the comment `#Now start the experiment and load the parameters`, make `cong=bbr`, and change `bwhost` back to 1000
+2. Experiment 2: Change `qsize` to 20
+3. Experiment 3: Change `bwhost` to 100 and `qsize` to 100
