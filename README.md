@@ -19,16 +19,16 @@ qsize=100
 cong=cubic
 ```
 ### TCP Reno
-#### Experiment 1: No changes need to be made
-#### Experiment 2: Uncomment `--cong=$cong \` under the comment `#Now start the experiment and load the parameters`
-#### Experiment 3: Change `qsize` to 20
+Experiment 1: No changes need to be made
+Experiment 2: Uncomment `--cong=$cong \` under the comment `#Now start the experiment and load the parameters`
+Experiment 3: Change `qsize` to 20
 
 ### TCP Cubic
-#### Experiment 1: No changes need to be made
-#### Experiment 2: Uncomment `--cong=$cong \` under the comment `#Now start the experiment and load the parameters`
-#### Experiment 3: Change `qsize` to 20
+Experiment 1: No changes need to be made
+Experiment 2: Uncomment `--cong=$cong \` under the comment `#Now start the experiment and load the parameters`
+Experiment 3: Change `qsize` to 20
 
 ### TCP BBR
-#### Experiment 1: No changes need to be made
-#### Experiment 2: Uncomment `--cong=$cong \` under the comment `#Now start the experiment and load the parameters`
-#### Experiment 3: Change `qsize` to 20
+Experiment 1: No changes need to be made
+Experiment 2: Uncomment `--cong=$cong \` under the comment `#Now start the experiment and load the parameters`
+Experiment 3: Change `qsize` to 20
