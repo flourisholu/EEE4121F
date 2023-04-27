@@ -5,7 +5,7 @@ set -e
 # You can change these parameters:
 bwhost=1000
 qsize=100
-cong=bbr
+cong=cubic
 
 # These parameters do not change:
 bwnet=2
