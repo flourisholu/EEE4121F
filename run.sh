@@ -6,13 +6,13 @@ set -e
 bwhost=1000
 qsize=100
 cong=bbr
-qman=fq
 
 # These parameters do not change:
 bwnet=2
 delay=50
 dir=./
 time=30
+qman=fq
 
 # Now start the experiment and load the parameters
 echo "The experiment is running..."
