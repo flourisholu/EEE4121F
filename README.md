@@ -10,7 +10,7 @@ sudo apt-get install update
 sudo apt-get install python-statistics
 ```
 ## Viewing images
-The plot grah is saved as rtt.png and the queueUse `fim rrt.png` and `fim queue.png` to view the RTT and queue plots.
+The plot graph is saved as **rtt.png** and the queue graph is saved as **queue.png**. You can use `fim rrt.png` and `fim queue.png` to view the RTT and queue plots, respectively.
 
 ## Running TCP experiments
 There are three experiments run for each TCP algorithm. For each experiment, changes are made in the *run.sh* bash script. Changes are made to this section of code:
